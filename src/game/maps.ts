@@ -12,41 +12,42 @@ function makeRng(seed: number) {
 
 type Grid = string[][];
 
+const get = (g: Grid, i: number, j: number): string | undefined => g[j]?.[i];
+const set = (g: Grid, i: number, j: number, ch: string) => {
+  const row = g[j];
+  if (row && i >= 0 && i < row.length) row[i] = ch;
+};
+
 function grid(w: number, h: number, fill: string): Grid {
   return Array.from({ length: h }, () => new Array<string>(w).fill(fill));
 }
 
 function box(g: Grid, x: number, y: number, w: number, h: number, ch: string) {
-  for (let j = y; j < y + h; j++)
-    for (let i = x; i < x + w; i++)
-      if (g[j] && g[j][i] !== undefined) g[j][i] = ch;
+  for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) set(g, i, j, ch);
 }
 
 function frame(g: Grid, x: number, y: number, w: number, h: number, ch: string) {
   for (let j = y; j < y + h; j++)
     for (let i = x; i < x + w; i++)
-      if ((j === y || j === y + h - 1 || i === x || i === x + w - 1) && g[j]?.[i] !== undefined)
-        g[j][i] = ch;
+      if (j === y || j === y + h - 1 || i === x || i === x + w - 1) set(g, i, j, ch);
 }
 
 function hut(g: Grid, x: number, y: number, w: number, h: number, doorSide: "s" | "n") {
   box(g, x, y, w, h, "f");
   frame(g, x, y, w, h, "#");
-  const dx = x + (w >> 1);
-  g[doorSide === "s" ? y + h - 1 : y][dx] = "+";
+  set(g, x + (w >> 1), doorSide === "s" ? y + h - 1 : y, "+");
 }
 
 function disc(g: Grid, cx: number, cy: number, r: number, ch: string) {
   for (let j = Math.floor(cy - r); j <= cy + r; j++)
     for (let i = Math.floor(cx - r); i <= cx + r; i++) {
       const d = Math.hypot(i - cx, (j - cy) * 1.25);
-      if (d <= r && g[j]?.[i] !== undefined) g[j][i] = ch;
+      if (d <= r) set(g, i, j, ch);
     }
 }
 
 function clear(g: Grid, cx: number, cy: number, r: number, ch: string) {
-  for (let j = cy - r; j <= cy + r; j++)
-    for (let i = cx - r; i <= cx + r; i++) if (g[j]?.[i] !== undefined) g[j][i] = ch;
+  for (let j = cy - r; j <= cy + r; j++) for (let i = cx - r; i <= cx + r; i++) set(g, i, j, ch);
 }
 
 function toRows(g: Grid) {
@@ -89,14 +90,14 @@ function buildVillage() {
   for (let j = 0; j < H; j++)
     for (let i = 0; i < W; i++) {
       const edge = Math.min(i, j, W - 1 - i, H - 1 - j);
-      if (edge < 2 || (edge < 4 && rnd() < 0.55)) g[j][i] = "T";
+      if (edge < 2 || (edge < 4 && rnd() < 0.55)) set(g, i, j, "T");
     }
 
   // vegetação e pedras
   for (let k = 0; k < 150; k++) {
     const i = 3 + Math.floor(rnd() * (W - 6));
     const j = 3 + Math.floor(rnd() * (H - 6));
-    if (g[j][i] === "g") g[j][i] = rnd() < 0.55 ? "b" : rnd() < 0.6 ? "T" : "r";
+    if (get(g, i, j) === "g") set(g, i, j, rnd() < 0.55 ? "b" : rnd() < 0.6 ? "T" : "r");
   }
 
   // lago ao nordeste
@@ -186,8 +187,8 @@ function buildFields() {
   for (let j = 0; j < H; j++)
     for (let i = 0; i < W; i++) {
       const edge = Math.min(i, j, W - 1 - i, H - 1 - j);
-      if (edge < 2) g[j][i] = "T";
-      else if (rnd() < 0.3) g[j][i] = "g";
+      if (edge < 2) set(g, i, j, "T");
+      else if (rnd() < 0.3) set(g, i, j, "g");
     }
 
   // pântanos
@@ -199,8 +200,8 @@ function buildFields() {
   for (let k = 0; k < 320; k++) {
     const i = 3 + Math.floor(rnd() * (W - 6));
     const j = 3 + Math.floor(rnd() * (H - 6));
-    if (g[j][i] === "m" || g[j][i] === "g")
-      g[j][i] = rnd() < 0.45 ? "T" : rnd() < 0.6 ? "b" : "r";
+    const cur = get(g, i, j);
+    if (cur === "m" || cur === "g") set(g, i, j, rnd() < 0.45 ? "T" : rnd() < 0.6 ? "b" : "r");
   }
 
   // trilha do norte até a cripta
@@ -211,12 +212,12 @@ function buildFields() {
   box(g, 38, 8, 10, 8, "d");
   frame(g, 38, 8, 10, 8, "r");
   clear(g, 43, 12, 2, "d");
-  g[8][43] = "d";
+  set(g, 43, 8, "d");
 
   // entrada da cripta
   box(g, 49, 17, 6, 9, "s");
   frame(g, 49, 17, 6, 9, "#");
-  g[21][49] = "+";
+  set(g, 49, 21, "+");
   clear(g, 52, 21, 1, "s");
 
   const map: MapDef = {
@@ -290,7 +291,7 @@ function buildCrypt() {
   for (let k = 0; k < 130; k++) {
     const i = 2 + Math.floor(rnd() * (W - 4));
     const j = 2 + Math.floor(rnd() * (H - 4));
-    if (g[j][i] === ".") g[j][i] = rnd() < 0.5 ? "b" : rnd() < 0.5 ? "r" : "w";
+    if (get(g, i, j) === ".") set(g, i, j, rnd() < 0.5 ? "b" : rnd() < 0.5 ? "r" : "w");
   }
   clear(g, 4, 20, 2, ".");
   clear(g, 35, 20, 4, ".");
@@ -329,11 +330,11 @@ export const MAPS: Record<string, MapDef> = {
 
 export function tileAt(mapId: string, x: number, y: number): TileStyle | null {
   const m = MAPS[mapId];
-  const row = m.rows[y];
+  const row = m?.rows[y];
   if (!row) return null;
   const ch = row[x];
   if (!ch) return null;
-  return m.palette[ch] ?? null;
+  return m?.palette[ch] ?? null;
 }
 
 export function isSolid(mapId: string, x: number, y: number) {
