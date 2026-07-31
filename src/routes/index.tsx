@@ -1,24 +1,33 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Game } from "@/components/game/Game";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Cinzas de Varlan — RPG de ação medieval em pixel art" },
+      {
+        name: "description",
+        content:
+          "Jogue como um órfão dos campos em Varlan: combate em tempo real, três mapas, loot, magia e escolhas que definem sua reputação.",
+      },
+      { property: "og:title", content: "Cinzas de Varlan" },
+      {
+        property: "og:description",
+        content:
+          "RPG de ação medieval em pixel art: dragões, cavaleiros quebrados e escolhas sujas em um mundo violento.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main>
+      <h1 className="sr-only">Cinzas de Varlan — RPG de ação medieval em pixel art</h1>
+      <Game />
+    </main>
   );
 }
