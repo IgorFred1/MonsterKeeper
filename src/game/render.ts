@@ -150,9 +150,7 @@ function block(
 }
 
 function tree(ctx: CanvasRenderingContext2D, cx: number, cy: number, dead: boolean, seed: number) {
-  ctx.fillStyle = "rgba(0,0,0,0.35)";
   diamond(ctx, cx, cy, "rgba(0,0,0,0.3)", TW * 0.7, TH * 0.7);
-  ctx.fillStyle = "#4a3career";
   ctx.fillStyle = dead ? "#4b4034" : "#4a3626";
   ctx.fillRect(cx - 2, cy - 24, 4, 24);
   if (dead) {

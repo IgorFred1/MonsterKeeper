@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { ITEMS } from "@/game/items";
 import { MAPS } from "@/game/maps";
 import { CLASSES, SKILLS } from "@/game/classes";
 import { render, screenToTile, isoX, isoY, clockLabel, dayNight } from "@/game/render";
@@ -18,7 +17,6 @@ import {
   playerDamage,
   quickPotion,
   respawn,
-  reputationLabel,
   saveGame,
   setSlot,
   slotInfo,
@@ -603,6 +601,3 @@ function MiniBar({
     </div>
   );
 }
-
-export const _ITEMS = ITEMS;
-export const _reputationLabel = reputationLabel;
