@@ -1,14 +1,9 @@
 # Monster Keeper
 
-This project was built with [Lovable](https://lovable.dev).
+Esse é meu projeto que eu dei o nome de Monster Keeper, sou  aficcionado pelo genero de jogos "RPG" ainda mais pelo os de estilo antigo, decidi desenvolver um projeto usando i.a e minhas ideias
 
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/94a2bcd1-7633-4863-b633-4ee6795007c0).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+## Ferramentas usadas no desenvolvimento
+Iniciei meu projeto pelo lovable e hoje eu uso o GitHub Copilot para entender melhor o desenvolvimento do meu projeto
 
 ## Development
 
