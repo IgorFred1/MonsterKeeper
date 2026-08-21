@@ -1,7 +1,5 @@
 # Monster Keeper
 
-conhece o jogo exiled kingdoms (jogo de android)?
-
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
